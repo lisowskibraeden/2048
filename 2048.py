@@ -48,7 +48,7 @@ class game:
         return True
 
     def checkBoard(self):
-        if not any(0 in x for x in game.board) and not game.checkMoves(self):
+        if not any(0 in x for x in game.board) and game.checkMoves(self):
             game.restart(self)
 
     def randomAdd(self):
