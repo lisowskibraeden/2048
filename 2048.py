@@ -19,7 +19,9 @@ seed(datetime.now().timestamp())
 newVal = [2, 2, 2, 2, 2, 2, 2, 2, 2, 4]
 colors = [0, '#eeb17d', '#f29866', '#f07f61','#f46042','#eace75', '#edcb67','#ecc85a', '#e5c254','#ecba4e', '#ffae00', '#bbfaa2', '#7bff47', '#48ff00', '#c675ff', '#ac38ff', '#000000']
 score = 0
+clock = pygame.time.Clock()
 class game:
+    game_over = False
     board = [[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0]]
     def __init__(self):
         game.randomAdd(self)
@@ -49,16 +51,16 @@ class game:
 
     def checkBoard(self):
         if not any(0 in x for x in game.board) and game.checkMoves(self):
-            game.restart(self)
+            game.game_over = True
 
     def randomAdd(self):
         x = randint(0, 3)
         y = randint(0, 3)
-        while self.board[y][x] != 0:
+        while game.board[y][x] != 0:
             x = randint(0, 3)
             y = randint(0, 3)
         v = randint(0, 9)
-        self.board[y][x] = newVal[v]
+        game.board[y][x] = newVal[v]
 
     def printBoard(self, board):
         print(board)
@@ -169,15 +171,36 @@ def main():
     g = game()
     screen.fill((255, 255, 255))
     while running:
-        score_text = myfont.render('Score', False, (0,0,0))
+        while g.game_over == True:
+            button = pygame.Rect(175, 150, 150, 50)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = event.pos
+                    if button.collidepoint(mouse_pos):
+                       g.game_over = False
+                       g.restart()
+            s = pygame.Surface((500,700))
+            s.set_alpha(5)
+            s.fill((255,255,255))
+            screen.blit(s, (0,0))
+            pygame.draw.rect(screen, [255, 0, 0], button)
+            game_over_text = myfont.render('Game Over', True, (0,0,0))
+            game_over_width, game_over_height = myfont.size('Game Over')
+            screen.blit(game_over_text, (-game_over_width / 2 + 250, -game_over_height / 2 + 175))
+            pygame.display.flip()
+            clock.tick(30)
+        screen.fill((255, 255, 255))
+        score_text = myfont.render('Score', True, (0,0,0))
         score_width, score_height = myfont.size('Score')
         screen.blit(score_text, (-score_width / 2 + 250, -score_height / 2 + 50))
-        score_num = myfont.render(str(score), False, (0,0,0))
+        score_num = myfont.render(str(score), True, (0,0,0))
         score_num_width, score_num_height = myfont.size(str(score))
         screen.blit(score_num, (-score_num_width / 2 + 250, -score_num_height / 2 + 100))
         for i in range(len(g.board)):
             for x in range(len(g.board)):
-                num = myfont.render(str(g.board[i][x]), False, (0, 0, 0))
+                num = myfont.render(str(g.board[i][x]), True, (0, 0, 0))
                 num_width, num_height = myfont.size(str(g.board[i][x]))
                 if g.board[i][x] != 0:
                     pygame.draw.rect(screen, colors[int(math.log(g.board[i][x], 2))], pygame.Rect(50 + 500/5 * i, 250 + 500/5 * x, 100, 100), 0, 3)
@@ -198,8 +221,9 @@ def main():
                     running = False
             elif event.type == QUIT:
                 running = False
+        
         pygame.display.flip()
-        screen.fill((255, 255, 255))
+        clock.tick(30)
     pygame.quit()
 
 if __name__ == "__main__":
