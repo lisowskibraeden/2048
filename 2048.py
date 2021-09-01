@@ -358,9 +358,9 @@ def run(params):
                 # store the new data into a long term memory
                 agent.remember(state_old, final_move, reward, state_new, g.game_over)
 
-            record = get_record(g.score, record)
-            display(g, screen, myfont)
-            pygame.time.wait(params['speed'])
+            # record = get_record(g.score, record)
+            # display(g, screen, myfont)
+            # pygame.time.wait(params['speed'])
             steps+=1
         if params['train']:
             agent.replay_new(agent.memory, params['batch_size'])
@@ -381,11 +381,11 @@ def define_parameters():
     params = dict()
     # Neural Network
     params['epsilon_decay_linear'] = 1/100
-    params['learning_rate'] = 0.00013629
+    params['learning_rate'] = 1
     params['first_layer_size'] = 200    # neurons in the first layer
     params['second_layer_size'] = 20   # neurons in the second layer
     params['third_layer_size'] = 50    # neurons in the third layer
-    params['episodes'] = 1000 
+    params['episodes'] = 100
     params['memory_size'] = 10000
     params['batch_size'] = 1000
     # Settings
