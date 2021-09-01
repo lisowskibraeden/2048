@@ -28,7 +28,6 @@ class game:
         game.randomAdd(self)
 
     def restart(self):
-        game.printBoard(self, game.board) # game restarts too early
         game.board = [[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0],[0, 0, 0, 0]]
         score = 0
         game.__init__(self)
